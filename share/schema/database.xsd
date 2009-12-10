@@ -1,0 +1,113 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+ <xsd:annotation>
+  <xsd:documentation xml:lang="en">
+   Neural Object Oriented Networks (NOON) v0.2 schema for database 
+   description files.
+  </xsd:documentation>
+ </xsd:annotation>
+
+ <!-- DATABASE GRAMMAR DEFINITION -->
+ <xsd:element name="database">
+
+  <!-- PARAMETERS TO CONTROL UNIQUENESS OF ID'S -->
+  <!-- This doesn't work as of libxml2 2.6.8
+  <xsd:unique name="uniqueNeuronId">
+   <xsd:selector xpath="./data/entry"/>
+   <xsd:field xpath="@id"/>
+  </xsd:unique>
+  -->
+
+  <xsd:complexType>
+
+   <xsd:sequence>
+
+    <!-- HEADER -->
+    <xsd:element name="header" type="HeaderType" minOccurs="1" maxOccurs="1"/>
+
+    <!-- DATA -->
+    <xsd:element name="data">
+     <xsd:complexType>
+      <xsd:sequence>
+       <xsd:element name="class" type="ClassType"
+        minOccurs="0" maxOccurs="unbounded"/>
+      </xsd:sequence>
+     </xsd:complexType>
+    </xsd:element>
+
+   </xsd:sequence>
+
+   <!-- DATABASE ATTRIBUTES -->
+   <xsd:attribute name="version" use="required">
+    <xsd:simpleType>
+     <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="0.1"/>
+      <xsd:enumeration value="0.2"/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+
+  </xsd:complexType>
+
+ <!-- END OF "network" DEFINITION -->
+ </xsd:element>
+
+<!-- ######################## -->
+<!-- # DEFINITIONS OF TYPES # -->
+<!-- ######################## -->
+
+<xsd:complexType name="HeaderType">
+ <xsd:sequence>
+  <xsd:element name="author" type="xsd:string"/>
+  <xsd:element name="name"  type="xsd:string"/>
+  <xsd:element name="version"  type="xsd:string"/>
+  <xsd:element name="created" type="xsd:dateTime"/>
+  <xsd:element name="lastSaved" type="xsd:dateTime"/>
+  <xsd:element name="comment" minOccurs="0" type="xsd:string"/>
+ </xsd:sequence>
+</xsd:complexType>
+
+<!-- ENTRY CLASS -->
+<!-- There is no provision for ensuring the input/target lists of all
+     entries have the same size, what has to be done by software. -->
+<xsd:complexType name="EntryType">
+ <xsd:sequence>
+  <xsd:element name="feature" type="xsd:string">
+<!-- unsupported by libxml2 as of 2.6.8
+   <xsd:simpleType>
+    <xsd:list itemType="xsd:string"/>
+   </xsd:simpleType>
+-->
+  </xsd:element>
+ </xsd:sequence>
+ <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="optional"/>
+</xsd:complexType>
+
+<!-- ENTRY WITH ROI DATA CLASS -->
+<xsd:complexType name="RoIEntryType">
+  <xsd:complexContent>
+    <xsd:extension base="EntryType">
+      <xsd:attribute name="filename" type="xsd:string" use="optional"/>
+      <xsd:attribute name="lvl1_id" type="xsd:nonNegativeInteger" 
+       use="required"/>
+      <xsd:attribute name="roi_id" type="xsd:nonNegativeInteger" 
+       use="required"/>
+      <xsd:attribute name="eta" type="xsd:double" use="required"/>
+      <xsd:attribute name="phi" type="xsd:double" use="required"/>
+    </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+
+<!-- CLASS CLASS :) -->
+<xsd:complexType name="ClassType">
+ <xsd:choice>
+  <xsd:element name="entry" type="EntryType" minOccurs="1"
+   maxOccurs="unbounded"/>
+  <xsd:element name="roientry" type="RoIEntryType" minOccurs="1"
+   maxOccurs="unbounded"/>
+ </xsd:choice>
+ <xsd:attribute name="name" type="xsd:string" use="required"/>
+</xsd:complexType>
+
+</xsd:schema>

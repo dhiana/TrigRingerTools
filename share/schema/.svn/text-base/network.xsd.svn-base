@@ -1,0 +1,193 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+ <xsd:annotation>
+  <xsd:documentation xml:lang="en">
+   Neural Object Oriented Networks (NOON) v0.2 schema for neural network
+   description files.
+  </xsd:documentation>
+ </xsd:annotation>
+
+ <!-- NETWORK GRAMMAR DEFINITION -->
+ <xsd:element name="network">
+
+  <!-- PARAMETERS TO CONTROL UNIQUENESS OF ID'S -->
+  <!-- This doesn't work as of libxml2 2.6.8
+  <xsd:unique name="uniqueNeuronId">
+   <xsd:selector xpath="layout/input|layout/bias|layout/hidden|layout/output"/>
+   <xsd:field xpath="@id"/>
+  </xsd:unique>
+  <xsd:unique name="uniqueSynapseId">
+   <xsd:selector xpath="./layout/synapse"/>
+   <xsd:field xpath="@id"/>
+  </xsd:unique>
+  -->
+
+  <xsd:complexType>
+
+   <xsd:sequence>
+
+    <!-- HEADER -->
+    <xsd:element name="header">
+     <xsd:complexType>
+      <xsd:sequence>
+       <xsd:element name="author" type="xsd:string"/>
+       <xsd:element name="name"  type="xsd:string"/>
+       <xsd:element name="version"  type="xsd:string"/>
+       <xsd:element name="created" type="xsd:dateTime"/>
+       <xsd:element name="lastSaved" type="xsd:dateTime"/>
+       <xsd:element name="comment" minOccurs="0" type="xsd:string"/>
+      </xsd:sequence>
+     </xsd:complexType>
+    </xsd:element>
+
+    <!-- LAYOUT -->
+    <xsd:element name="layout">
+     <xsd:complexType>
+      <xsd:choice maxOccurs="unbounded">
+       <xsd:element name="input" type="InputNeuronType"
+        minOccurs="0" maxOccurs="unbounded"/>
+       <xsd:element name="inputnonorm" type="InputNeuronNoNormType"
+        minOccurs="0" maxOccurs="unbounded"/>
+       <xsd:element name="bias" type="BiasNeuronType"
+        minOccurs="0" maxOccurs="unbounded"/>
+       <xsd:element name="hidden" type="ActiveNeuronType"
+        minOccurs="0" maxOccurs="unbounded"/>
+       <xsd:element name="output" type="ActiveNeuronType"
+        minOccurs="1" maxOccurs="unbounded"/>
+       <xsd:element name="synapse" type="SynapseType"
+        minOccurs="1" maxOccurs="unbounded" />
+      </xsd:choice>
+     </xsd:complexType>
+    </xsd:element>
+	
+   </xsd:sequence>
+
+   <!-- NETWORK ATTRIBUTES -->
+   <xsd:attribute name="version" use="required">
+    <xsd:simpleType>
+     <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="0.3"/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+
+  </xsd:complexType>
+
+ <!-- END OF "network" DEFINITION -->
+ </xsd:element>
+
+<!-- ######################## -->
+<!-- # DEFINITIONS OF TYPES # -->
+<!-- ######################## -->
+
+<!-- BASE NEURON CLASS -->
+<xsd:complexType name="NeuronType">
+ <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required"/>
+</xsd:complexType>
+
+<!-- INPUT NEURON CLASS -->
+<xsd:complexType name="InputNeuronType">
+ <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required"/>
+ <xsd:attribute name="subtract" type="xsd:double" use="optional" default="0.0"/>
+ <xsd:attribute name="divide" type="xsd:double" use="optional" default="1.0"/>
+</xsd:complexType>
+
+<!-- INPUT NEURON CLASS WITHOUT NORMALIZATION -->
+<xsd:complexType name="InputNeuronNoNormType">
+ <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required"/>
+</xsd:complexType>
+
+<!-- BIAS NEURON CLASS -->
+<xsd:complexType name="BiasNeuronType">
+ <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required"/>
+ <xsd:attribute name="bias" type="xsd:double" use="required"/>
+</xsd:complexType>
+<!-- The following doesn't work for now as of libxml2 2.6.8
+<xsd:complexType name="BiasNeuronType">
+  <xsd:complexContent>
+   <xsd:extension base="NeuronType">
+    <xsd:attribute name="bias" type="xsd:double" use="required"/>
+   </xsd:extension>
+  </xsd:complexContent>
+</xsd:complexType>
+-->
+
+<!-- OUTPUT/HIDDEN NEURON CLASS -->
+<xsd:complexType name="ActiveNeuronType">
+ <xsd:choice>
+  <xsd:element name="backPropagation" type="NeuronBackPropType"
+   minOccurs="0" maxOccurs="1"/>
+ </xsd:choice>
+ <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required"/>
+</xsd:complexType>
+
+<!--- SYNAPSE CLASS -->
+<xsd:complexType name="SynapseType">
+ <xsd:sequence>
+  <xsd:element name="weight" minOccurs="0" maxOccurs="1" 
+   type="xsd:double"/>
+  <xsd:choice>
+   <xsd:element name="backPropagation" minOccurs="0" maxOccurs="1"
+    type="SynapseBackPropType"/>
+   <xsd:element name="rBackPropagation" minOccurs="0" maxOccurs="1"
+    type="SynapseRPropType"/>
+  </xsd:choice>
+ </xsd:sequence>
+ <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required"/>
+ <xsd:attribute name="from" type="xsd:nonNegativeInteger" use="required"/>
+ <xsd:attribute name="to" type="xsd:nonNegativeInteger" use="required"/>
+</xsd:complexType>
+
+<!-- BACKPROPAGATION ELEMENTS FOR NEURONS AND SYNAPSES -->
+<xsd:complexType name="NeuronBackPropType">
+ <xsd:attribute name="activationFunction">
+  <xsd:simpleType>
+   <xsd:restriction base="xsd:string">
+    <xsd:enumeration value="tanh"/>
+    <xsd:enumeration value="sigmoid"/>
+    <xsd:enumeration value="linear"/>
+   </xsd:restriction>
+  </xsd:simpleType>
+ </xsd:attribute>
+</xsd:complexType>
+
+<xsd:complexType name="SynapseBackPropType">
+ <xsd:attribute name="learnRate" use="required">
+  <xsd:simpleType>
+   <xsd:restriction base="xsd:double">
+    <xsd:minExclusive value="0.0"/>
+    <xsd:maxInclusive value="2.0"/>
+   </xsd:restriction>
+  </xsd:simpleType>
+ </xsd:attribute>
+ <xsd:attribute name="momentum" use="optional" default="0.0">
+  <xsd:simpleType>
+   <xsd:restriction base="xsd:double">
+    <xsd:minInclusive value="0.0"/>
+    <xsd:maxExclusive value="1.0"/>
+   </xsd:restriction>
+  </xsd:simpleType>
+ </xsd:attribute>
+ <xsd:attribute name="learnRateDecay" use="optional" default="0.0">
+  <xsd:simpleType>
+   <xsd:restriction base="xsd:double">
+    <xsd:minInclusive value="0.0"/>
+    <xsd:maxInclusive value="1.0"/>
+   </xsd:restriction>
+  </xsd:simpleType>
+ </xsd:attribute>
+</xsd:complexType>
+
+<xsd:complexType name="SynapseRPropType">
+ <xsd:attribute name="weightUpdate" use="required">
+  <xsd:simpleType>
+   <xsd:restriction base="xsd:double">
+    <xsd:minExclusive value="0.0"/>
+    <xsd:maxInclusive value="50.0"/>
+   </xsd:restriction>
+  </xsd:simpleType>
+ </xsd:attribute>
+</xsd:complexType>
+
+</xsd:schema>

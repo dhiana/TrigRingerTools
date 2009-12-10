@@ -1,0 +1,352 @@
+//roi_iterator.h
+
+#include <vector>
+#include <string>
+
+#include <TChain.h>
+#include <TFile.h>
+
+namespace roiformat
+{
+
+  class RoIIterator
+  {
+  protected:
+    // data attributes.
+    unsigned totalEntries;
+    unsigned totalRoIs;
+  
+    //Control attributes.
+    bool updateClustersCount;
+    bool updateRoICount;
+    unsigned clusPos;
+    unsigned roiPos;
+    unsigned roiStart, roiEnd;
+    unsigned ringStart, ringEnd;
+
+    // Variables for the ROOT branches.
+    TChain *chain;
+    UInt_t rootNClusters;
+    std::vector<UInt_t> *rootLVL1Id;
+    std::vector<UInt_t> *rootRoIId;
+    std::vector<Float_t> *rootLVL1Eta;
+    std::vector<Float_t> *rootLVL1Phi;
+    std::vector<Float_t> *rootLVL2Eta;
+    std::vector<Float_t> *rootLVL2Phi;
+    std::vector<Float_t> *rootLVL2Et;
+    std::vector<Float_t> *rootRings;
+    std::vector<UInt_t> *rootNCells;
+    std::vector<UChar_t> *rootDetCells;
+    std::vector<Float_t> *rootEta;
+    std::vector<Float_t> *rootPhi;
+    std::vector<Float_t> *rootEnergy;
+
+    //These are the attributes for the output NTuple
+    TFile *outFile;
+    TTree *outTree;
+    UInt_t outNClusters;
+    std::vector<UInt_t> *outLVL1Id;
+    std::vector<UInt_t> *outRoIId;
+    std::vector<Float_t> *outLVL1Eta;
+    std::vector<Float_t> *outLVL1Phi;
+    std::vector<Float_t> *outLVL2Eta;
+    std::vector<Float_t> *outLVL2Phi;
+    std::vector<Float_t> *outLVL2Et;
+    std::vector<Float_t> *outRings;
+    std::vector<UInt_t> *outNCells;
+    std::vector<UChar_t> *outDetCells;
+    std::vector<Float_t> *outEta;
+    std::vector<Float_t> *outPhi;
+    std::vector<Float_t> *outEnergy;
+
+
+    void setBranches()
+    {
+      chain->SetBranchStatus("*",0);  // disable all branches
+      chain->SetBranchStatus("Ringer_NClusters",1);
+      chain->SetBranchStatus("Ringer_LVL1_Id",1);
+      chain->SetBranchStatus("Ringer_Roi_Id",1);
+      chain->SetBranchStatus("Ringer_LVL1_Eta",1);
+      chain->SetBranchStatus("Ringer_LVL1_Phi",1);
+      chain->SetBranchStatus("Ringer_LVL2_Eta",1);
+      chain->SetBranchStatus("Ringer_LVL2_Phi",1);
+      chain->SetBranchStatus("Ringer_LVL2_Et",1);
+      chain->SetBranchStatus("Ringer_Rings",1);
+      chain->SetBranchStatus("Ringer_NCells",1);
+      chain->SetBranchStatus("Ringer_DetCells",1);
+      chain->SetBranchStatus("Ringer_EtaCells",1);
+      chain->SetBranchStatus("Ringer_PhiCells",1);
+      chain->SetBranchStatus("Ringer_ECells",1);
+    }
+
+    void calcRoIRange()
+    {
+      roiStart = 0;
+      for (unsigned i=0; i<roiPos; i++) roiStart += rootNCells->at(i);
+      roiEnd = roiStart + rootNCells->at(roiPos);
+    }
+    
+    void calcRingRange()
+    {
+      const unsigned ringSize = static_cast<unsigned>(rootRings->size() / rootNClusters);
+      ringStart = roiPos * ringSize; 
+      ringEnd = (roiPos + 1) * ringSize;
+    }
+
+  public:
+    RoIIterator(const std::string &outputNTupleName = "")
+    {
+      clusPos = -1; // what we want here is to assign this attribute the value immediately before zero (2^32-1).
+      rootNClusters = totalEntries = totalRoIs = roiPos = 0;
+      updateClustersCount = updateRoICount = false;
+      rootLVL1Id = new std::vector<UInt_t>;
+      rootRoIId = new std::vector<UInt_t>;
+      rootLVL1Eta = new std::vector<Float_t>;
+      rootLVL1Phi = new std::vector<Float_t>;
+      rootLVL2Eta = new std::vector<Float_t>;
+      rootLVL2Phi = new std::vector<Float_t>;
+      rootLVL2Et = new std::vector<Float_t>;
+      rootRings = new std::vector<Float_t>;
+      rootNCells = new std::vector<UInt_t>;
+      rootDetCells = new std::vector<UChar_t>;
+      rootEta = new std::vector<Float_t>;
+      rootPhi = new std::vector<Float_t>;
+      rootEnergy = new std::vector<Float_t>;
+
+      chain = new TChain("CollectionTree");
+      setBranches();
+      chain->SetBranchAddress("Ringer_NClusters", &rootNClusters);
+      chain->SetBranchAddress("Ringer_LVL1_Id", &rootLVL1Id);
+      chain->SetBranchAddress("Ringer_Roi_Id", &rootRoIId);
+      chain->SetBranchAddress("Ringer_LVL1_Eta",&rootLVL1Eta);
+      chain->SetBranchAddress("Ringer_LVL1_Phi",&rootLVL1Phi);
+      chain->SetBranchAddress("Ringer_LVL2_Eta", &rootLVL2Eta);
+      chain->SetBranchAddress("Ringer_LVL2_Phi", &rootLVL2Phi);
+      chain->SetBranchAddress("Ringer_LVL2_Et", &rootLVL2Et);
+      chain->SetBranchAddress("Ringer_Rings", &rootRings);
+      chain->SetBranchAddress("Ringer_NCells",&rootNCells);
+      chain->SetBranchAddress("Ringer_DetCells",&rootDetCells);
+      chain->SetBranchAddress("Ringer_EtaCells",&rootEta);
+      chain->SetBranchAddress("Ringer_PhiCells",&rootPhi);
+      chain->SetBranchAddress("Ringer_ECells",&rootEnergy);
+
+      outTree = NULL;
+      if (outputNTupleName != "") // we will be saving some of the RoIs to a new ntuple.
+      {
+        outFile = new TFile(outputNTupleName.c_str(), "recreate");
+        outTree = new TTree("CollectionTree", "Whatever");
+        outNClusters = 0;
+        outLVL1Id = new std::vector<UInt_t>;
+        outRoIId = new std::vector<UInt_t>;
+        outLVL1Eta = new std::vector<Float_t>;
+        outLVL1Phi = new std::vector<Float_t>;
+        outLVL2Eta = new std::vector<Float_t>;
+        outLVL2Phi = new std::vector<Float_t>;
+        outLVL2Et = new std::vector<Float_t>;
+        outRings = new std::vector<Float_t>;
+        outNCells = new std::vector<UInt_t>;
+        outDetCells = new std::vector<UChar_t>;
+        outEta = new std::vector<Float_t>;
+        outPhi = new std::vector<Float_t>;
+        outEnergy = new std::vector<Float_t>;
+        outTree->Branch("Ringer_NClusters", &outNClusters, "Ringer_NClusters/i");
+        outTree->Branch("Ringer_LVL1_Id", &outLVL1Id);
+        outTree->Branch("Ringer_Roi_Id", &outRoIId);
+        outTree->Branch("Ringer_LVL1_Eta",&outLVL1Eta);
+        outTree->Branch("Ringer_LVL1_Phi",&outLVL1Phi);
+        outTree->Branch("Ringer_LVL2_Eta", &outLVL2Eta);
+        outTree->Branch("Ringer_LVL2_Phi", &outLVL2Phi);
+        outTree->Branch("Ringer_LVL2_Et", &outLVL2Et);
+        outTree->Branch("Ringer_Rings", &outRings);
+        outTree->Branch("Ringer_NCells",&outNCells);
+        outTree->Branch("Ringer_DetCells",&outDetCells);
+        outTree->Branch("Ringer_EtaCells",&outEta);
+        outTree->Branch("Ringer_PhiCells",&outPhi);
+        outTree->Branch("Ringer_ECells",&outEnergy);
+      }
+    }
+    
+
+    ~RoIIterator()
+    {
+      delete chain;
+      delete rootLVL1Id;
+      delete rootRoIId;
+      delete rootLVL1Eta;
+      delete rootLVL1Phi;
+      delete rootLVL2Eta;
+      delete rootLVL2Phi;
+      delete rootLVL2Et;
+      delete rootRings;
+      delete rootNCells;
+      delete rootDetCells;
+      delete rootEta;
+      delete rootPhi;
+      delete rootEnergy;
+
+      if (outTree)
+      {
+        outTree->Write();
+        delete outTree;
+        delete outFile;
+        delete outLVL1Id;
+        delete outRoIId;
+        delete outLVL1Eta;
+        delete outLVL1Phi;
+        delete outLVL2Eta;
+        delete outLVL2Phi;
+        delete outLVL2Et;
+        delete outRings;
+        delete outNCells;
+        delete outDetCells;
+        delete outEta;
+        delete outPhi;
+        delete outEnergy;
+      }
+    }
+
+    void saveRoI()
+    {
+      outNClusters = 1;
+      outLVL1Id->clear();
+      outRoIId->clear();
+      outLVL1Eta->clear();
+      outLVL1Phi->clear();
+      outLVL2Eta->clear();
+      outLVL2Phi->clear();
+      outLVL2Et->clear();
+      outRings->clear();
+      outNCells->clear();
+      outDetCells->clear();
+      outEta->clear();
+      outPhi->clear();
+      outEnergy->clear();
+
+      outLVL1Id->push_back(lvl1_id());
+      outRoIId->push_back(roi_id());
+      outLVL1Eta->push_back(lvl1_eta());
+      outLVL1Phi->push_back(lvl1_phi());
+      outLVL2Eta->push_back(lvl2_eta());
+      outLVL2Phi->push_back(lvl2_phi());
+      outLVL2Et->push_back(lvl2_et());
+      rings(*outRings);
+      outNCells->push_back(nCells());
+      detectors(*outDetCells);
+      eta(*outEta);
+      phi(*outPhi);
+      energy(*outEnergy);
+
+      outTree->Fill();
+    }
+
+    void setBranchStatus(const std::string &branch, const bool enable)
+    {
+      chain->SetBranchStatus(branch.c_str(), static_cast<Bool_t>(enable));
+    }
+  
+
+    void add(const std::string &path)
+    {
+      chain->Add(path.c_str());
+      updateClustersCount = updateRoICount = true;
+    }
+
+  
+    unsigned getEntries()
+    {
+      if ( (!totalEntries) || (updateClustersCount) )
+      {
+        updateClustersCount = false;
+        totalEntries = static_cast<unsigned>(chain->GetEntries());
+      }
+
+      return totalEntries;
+    }
+
+
+    unsigned getNumRoIs()
+    {
+      if ( (totalRoIs) && (!updateRoICount) ) return totalRoIs;
+
+//      chain->SetBranchStatus("*",0);  // disable all branches (faster search)
+//      chain->SetBranchStatus("Ringer_NClusters",1);
+
+      totalRoIs = 0;
+      for (Int_t ev=0; ev<static_cast<Int_t>(getEntries()); ev++)
+      {
+        chain->GetEntry(ev);
+        totalRoIs += rootNClusters;
+      }
+    
+//      setBranches();
+      updateRoICount = false;
+      return totalRoIs;
+    }
+  
+  
+    bool next()
+    {
+      // Going to the next RoI;
+      roiPos++;
+    
+      // If true, then we finished the RoIs for this cluster.
+      if (roiPos >= rootNClusters)
+      {
+        // Looking for the next valid cluster.
+        for (clusPos = clusPos + 1; clusPos < getEntries(); clusPos++)
+        {
+          chain->GetEntry(clusPos);
+          if (rootNClusters)
+          {
+            roiPos = 0;
+            break;
+          }
+        }
+      }
+          
+      if (clusPos < getEntries())
+      {
+        // calculating the starting and ending indexes for the RoI and the rings.
+        calcRoIRange();
+        calcRingRange();
+        return true;
+      }
+      else return false;
+    }
+  
+    unsigned nClusters() const {return rootNClusters;}
+    unsigned lvl1_id() const {return rootLVL1Id->at(roiPos);}
+    unsigned roi_id() const {return rootRoIId->at(roiPos);}
+    float lvl1_eta() const {return rootLVL1Eta->at(roiPos);}
+    float lvl1_phi() const {return rootLVL1Phi->at(roiPos);}  
+    float lvl2_eta() const {return rootLVL2Eta->at(roiPos);}
+    float lvl2_phi() const {return rootLVL2Phi->at(roiPos);}
+    float lvl2_et() const {return rootLVL2Et->at(roiPos);}
+    unsigned nCells() const {return rootNCells->at(roiPos);}
+  
+    void rings(std::vector<float> &vec) const
+    {
+      for (unsigned i = ringStart; i < ringEnd; i++) vec.push_back(rootRings->at(i));
+    }
+  
+    void detectors(std::vector<unsigned char> &vec) const
+    {
+      for (unsigned i = roiStart; i < roiEnd; i++) vec.push_back(rootDetCells->at(i));
+    }
+
+    void eta(std::vector<float> &vec) const
+    {
+      for (unsigned i = roiStart; i < roiEnd; i++) vec.push_back(rootEta->at(i));
+    }
+
+    void phi(std::vector<float> &vec) const
+    {
+      for (unsigned i = roiStart; i < roiEnd; i++) vec.push_back(rootPhi->at(i));
+    }
+
+    void energy(std::vector<float> &vec) const
+    {
+      for (unsigned i = roiStart; i < roiEnd; i++) vec.push_back(rootEnergy->at(i));
+    }
+  };
+}

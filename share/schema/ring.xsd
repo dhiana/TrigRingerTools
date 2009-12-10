@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+ <xsd:annotation>
+  <xsd:documentation xml:lang="en">
+   RINGER v0.1 schema for ring set configuration.
+  </xsd:documentation>
+ </xsd:annotation>
+
+ <!-- DATABASE GRAMMAR DEFINITION -->
+ <xsd:element name="ring">
+
+  <!-- PARAMETERS TO CONTROL UNIQUENESS OF ID'S -->
+  <!-- This doesn't work as of libxml2 2.6.8
+  <xsd:unique name="uniqueRingId">
+   <xsd:selector xpath="ring/config/set"/>
+   <xsd:field xpath="@id"/>
+  </xsd:unique>
+  -->
+
+  <xsd:complexType>
+
+   <xsd:sequence>
+
+    <!-- HEADER -->
+    <xsd:element name="header">
+     <xsd:complexType>
+      <xsd:sequence>
+       <xsd:element name="author" type="xsd:string"/>
+       <xsd:element name="name"  type="xsd:string"/>
+       <xsd:element name="version"  type="xsd:string"/>
+       <xsd:element name="created" type="xsd:dateTime"/>
+       <xsd:element name="lastSaved" type="xsd:dateTime"/>
+       <xsd:element name="comment" minOccurs="0" type="xsd:string"/>
+      </xsd:sequence>
+     </xsd:complexType>
+    </xsd:element>
+
+    <!-- DATA -->
+    <xsd:element name="config">
+     <xsd:complexType>
+      <xsd:sequence>
+       <xsd:element name="set" type="RingSetType"
+        minOccurs="1" maxOccurs="unbounded"/>
+      </xsd:sequence>
+     </xsd:complexType>
+    </xsd:element>
+	
+   </xsd:sequence>
+
+   <!-- DATABASE ATTRIBUTES -->
+   <xsd:attribute name="version" use="required">
+    <xsd:simpleType>
+     <xsd:restriction base="xsd:string">
+      <xsd:enumeration value="0.1"/>
+     </xsd:restriction>
+    </xsd:simpleType>
+   </xsd:attribute>
+
+  </xsd:complexType>
+
+ <!-- END OF "ringconfig" DEFINITION -->
+ </xsd:element>
+
+<!-- ######################## -->
+<!-- # DEFINITIONS OF TYPES # -->
+<!-- ######################## -->
+
+<!-- CLASS DETECTORTYPE -->
+<xsd:simpleType name="DetectorType">
+ <xsd:restriction base="xsd:string">
+  <xsd:enumeration value="PSBARREL" />
+  <xsd:enumeration value="EMBARREL1" />
+  <xsd:enumeration value="EMBARREL2" />
+  <xsd:enumeration value="EMBARREL3" />
+  <xsd:enumeration value="PSENDCAP" />
+  <xsd:enumeration value="EMENDCAP1" />
+  <xsd:enumeration value="EMENDCAP2" />
+  <xsd:enumeration value="EMENDCAP3" />
+  <xsd:enumeration value="HADENCAP0" />
+  <xsd:enumeration value="HADENCAP1" />
+  <xsd:enumeration value="HADENCAP2" />
+  <xsd:enumeration value="HADENCAP3" />
+  <xsd:enumeration value="TILEBARREL0" />
+  <xsd:enumeration value="TILEBARREL1" />
+  <xsd:enumeration value="TILEBARREL2" />
+  <xsd:enumeration value="TILEGAPSCI0" />
+  <xsd:enumeration value="TILEGAPSCI1" />
+  <xsd:enumeration value="TILEGAPSCI2" />
+  <xsd:enumeration value="TILEEXTB0" />
+  <xsd:enumeration value="TILEEXTB1" />
+  <xsd:enumeration value="TILEEXTB2" />
+  <xsd:enumeration value="FORWCAL0" />
+  <xsd:enumeration value="FORWCAL1" />
+  <xsd:enumeration value="FORWCAL2" />
+  <xsd:enumeration value="UNKNOWN" />
+ </xsd:restriction>
+</xsd:simpleType>
+
+<!-- CLASS NORMALISATIONTYPE -->
+<xsd:simpleType name="NormalisationType">
+ <xsd:restriction base="xsd:string">
+  <xsd:enumeration value="EVENT" />
+  <xsd:enumeration value="SECTION" />
+  <xsd:enumeration value="SET" />
+  <xsd:enumeration value="SEQUENTIAL" />
+  <xsd:enumeration value="NONE" />
+ </xsd:restriction>
+</xsd:simpleType>
+
+<!-- CLASS SECTIONTYPE -->
+<xsd:simpleType name="SectionType">
+ <xsd:restriction base="xsd:string">
+  <xsd:enumeration value="EM" />
+  <xsd:enumeration value="HADRONIC" />
+ </xsd:restriction>
+</xsd:simpleType>
+
+<!-- Values allowed for eta widths -->
+<xsd:simpleType name="EtaType">
+ <xsd:restriction base="xsd:double">
+  <xsd:minExclusive value="0.0"/>
+  <xsd:maxInclusive value="1.0"/>
+ </xsd:restriction>
+</xsd:simpleType>
+
+<!-- Values allowed for phi widths -->
+<xsd:simpleType name="PhiType">
+ <xsd:restriction base="xsd:double">
+  <xsd:minExclusive value="0.0"/>
+  <xsd:maxInclusive value="1.0"/>
+ </xsd:restriction>
+</xsd:simpleType>
+
+<!-- CLASS RINGSETTYPE -->
+<xsd:complexType name="RingSetType">
+ <xsd:sequence>
+  <xsd:element name="width">
+   <xsd:complexType>
+    <xsd:attribute name="eta" type="EtaType" use="required" />
+    <xsd:attribute name="phi" type="PhiType" use="required" />
+   </xsd:complexType>
+  </xsd:element>
+  <!-- libxml2, as of 2.6.8, doesn't accept lists made out of enumerations -->
+  <xsd:element name="detector">
+   <xsd:complexType>
+    <xsd:sequence minOccurs="1" maxOccurs="25">
+     <xsd:element name="entry" type="DetectorType" />
+    </xsd:sequence>
+   </xsd:complexType>
+  </xsd:element>
+ </xsd:sequence>
+ <xsd:attribute name="name" type="xsd:string" use="required" />
+ <xsd:attribute name="length" type="xsd:nonNegativeInteger" use="required" />
+ <xsd:attribute name="id" type="xsd:nonNegativeInteger" use="required" />
+ <xsd:attribute name="normalisation" type="NormalisationType" use="required" />
+ <xsd:attribute name="section" type="SectionType" use="required" />
+</xsd:complexType>
+
+</xsd:schema>

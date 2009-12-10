@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database version="0.1">
+
+<header>
+ <author>Andre dot dos dot Anjos at cern dot ch</author>
+ <name>Caloba example</name>
+ <version>1.0</version>
+ <created>2004-03-17T10:41:00</created>
+ <lastSaved>2004-03-17T10:41:00</lastSaved>
+ <comment>Simple exercise from Caloba's course slides</comment>
+</header>
+
+<data>
+ <class name="single">
+  <entry id="0"><feature>0.1 0.7</feature></entry>
+ </class> 
+</data>
+
+</database>

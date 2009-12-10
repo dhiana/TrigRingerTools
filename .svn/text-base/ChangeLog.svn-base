@@ -1,0 +1,51 @@
+2009-06-29 David Quarrie <David.Quarrie@cern.ch>
+	* cmt/requirements: Cleanup requirements to make it function on MacOSX as well as SLCn
+	* Tagging TrigRingerTools-03-27-05
+	
+2009-04-09 Danilo Enoque Ferreira de Lima <dferreir@mail.cern.ch>
+	* Added functionality to read T2CaloEgamma information from ntuples at load_rings.cxx
+	* Added load_roi.cxx
+
+2009-02-14 Danilo Enoque Ferreira de Lima <dferreir@mail.cern.ch>
+	* Cleaned requirements.
+
+2009-01-27 Danilo Enoque Ferreira de Lima <dferreir@mail.cern.ch>
+	* Added CLASSDEF for roiformat::RoI.
+
+2009-01-23 Danilo Enoque Ferreira de Lima <dferreir@mail.cern.ch>
+	* Fixed some other warnings from compiler.
+
+2009-01-12  scott snyder  <snyder@bnl.gov>
+
+	* Tagging TrigRingerTools-03-25-03
+
+	* TrigRingerTools/data/Pattern.h: Fix compilation warnings and gcc
+	4.3 compilation.
+	* TrigRingerTools/data/SimplePatternSet.h: Likewise.
+	* TrigRingerTools/network/BiasNeuron.h: Likewise.
+	* TrigRingerTools/sys/File.h: Likewise.
+	* TrigRingerTools/sys/Plain.h: Likewise.
+	* src/config/config_Synapse.cxx: Likewise.
+	* src/data/data_RandomInteger.cxx: Likewise.
+	* src/network/network_InputNeuron.cxx: Likewise.
+	* src/network/network_InputNeuronNoNorm.cxx: Likewise.
+	* src/network/network_NeuronBackProp.cxx: Likewise.
+	* src/network/network_OutputNeuron.cxx: Likewise.
+	* src/rbuild/rbuild_RingSet.cxx: Likewise.
+	* src/rbuild/rbuild_util.cxx: Likewise.
+	* src/roiformat/roiformat_Database.cxx: Likewise.
+	* src/sys/sys_util.cxx: Likewise.
+	* src/sys/sys_xmlutil.cxx: Likewise.
+	* cmt/requirements: Fix linking.
+
+2008-12-05  Danilo Enoque Ferreira de Lima <dferreir@mail.cern.ch>
+	* Added Input Neuron which doesn't apply normalization.
+	* Optimized RingSet::add : it doesn't check if the layers are correct now.
+
+2008-09-11  Danilo Enoque Ferreira de Lima <dferreir@mail.cern.ch>
+	* src/sys/sys_util.cxx: Corrected initialization of struct tm.
+
+2008-08-19  David Quarrie <David.Quarrie@cern.ch>
+	* cmt/requirements: Tweak linkopts for notAsNeeded case 
+
+Thu Feb 16 15:44:45 CET 2006 : package created

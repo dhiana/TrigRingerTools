@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database version="0.1">
+
+<header>
+ <author>Andre dot dos dot Anjos at cern dot ch</author>
+ <name>Classical Iris database</name>
+ <version>1.0</version>
+ <created>2004-03-17T10:41:00</created>
+ <lastSaved>2004-03-17T10:41:00</lastSaved>
+ <comment>See file iris.names</comment>
+</header>
+
+<data>
+ <class name="Iris-setosa">
+  <entry id="0"><feature>5.1 3.5 1.4 0.2</feature></entry>
+  <entry id="1"><feature>4.9 3 1.4 0.2</feature></entry>
+  <entry id="2"><feature>4.7 3.2 1.3 0.2</feature></entry>
+  <entry id="3"><feature>4.6 3.1 1.5 0.2</feature></entry>
+  <entry id="4"><feature>5 3.6 1.4 0.2</feature></entry>
+  <entry id="5"><feature>5.4 3.9 1.7 0.4</feature></entry>
+  <entry id="6"><feature>4.6 3.4 1.4 0.3</feature></entry>
+  <entry id="7"><feature>5 3.4 1.5 0.2</feature></entry>
+  <entry id="8"><feature>4.4 2.9 1.4 0.2</feature></entry>
+  <entry id="9"><feature>4.9 3.1 1.5 0.1</feature></entry>
+  <entry id="10"><feature>5.4 3.7 1.5 0.2</feature></entry>
+  <entry id="11"><feature>4.8 3.4 1.6 0.2</feature></entry>
+  <entry id="12"><feature>4.8 3 1.4 0.1</feature></entry>
+  <entry id="13"><feature>4.3 3 1.1 0.1</feature></entry>
+  <entry id="14"><feature>5.8 4 1.2 0.2</feature></entry>
+  <entry id="15"><feature>5.7 4.4 1.5 0.4</feature></entry>
+  <entry id="16"><feature>5.4 3.9 1.3 0.4</feature></entry>
+  <entry id="17"><feature>5.1 3.5 1.4 0.3</feature></entry>
+  <entry id="18"><feature>5.7 3.8 1.7 0.3</feature></entry>
+  <entry id="19"><feature>5.1 3.8 1.5 0.3</feature></entry>
+  <entry id="20"><feature>5.4 3.4 1.7 0.2</feature></entry>
+  <entry id="21"><feature>5.1 3.7 1.5 0.4</feature></entry>
+  <entry id="22"><feature>4.6 3.6 1 0.2</feature></entry>
+  <entry id="23"><feature>5.1 3.3 1.7 0.5</feature></entry>
+  <entry id="24"><feature>4.8 3.4 1.9 0.2</feature></entry>
+  <entry id="25"><feature>5 3 1.6 0.2</feature></entry>
+  <entry id="26"><feature>5 3.4 1.6 0.4</feature></entry>
+  <entry id="27"><feature>5.2 3.5 1.5 0.2</feature></entry>
+  <entry id="28"><feature>5.2 3.4 1.4 0.2</feature></entry>
+  <entry id="29"><feature>4.7 3.2 1.6 0.2</feature></entry>
+  <entry id="30"><feature>4.8 3.1 1.6 0.2</feature></entry>
+  <entry id="31"><feature>5.4 3.4 1.5 0.4</feature></entry>
+  <entry id="32"><feature>5.2 4.1 1.5 0.1</feature></entry>
+  <entry id="33"><feature>5.5 4.2 1.4 0.2</feature></entry>
+  <entry id="34"><feature>4.9 3.1 1.5 0.1</feature></entry>
+  <entry id="35"><feature>5 3.2 1.2 0.2</feature></entry>
+  <entry id="36"><feature>5.5 3.5 1.3 0.2</feature></entry>
+  <entry id="37"><feature>4.9 3.1 1.5 0.1</feature></entry>
+  <entry id="38"><feature>4.4 3 1.3 0.2</feature></entry>
+  <entry id="39"><feature>5.1 3.4 1.5 0.2</feature></entry>
+  <entry id="40"><feature>5 3.5 1.3 0.3</feature></entry>
+  <entry id="41"><feature>4.5 2.3 1.3 0.3</feature></entry>
+  <entry id="42"><feature>4.4 3.2 1.3 0.2</feature></entry>
+  <entry id="43"><feature>5 3.5 1.6 0.6</feature></entry>
+  <entry id="44"><feature>5.1 3.8 1.9 0.4</feature></entry>
+  <entry id="45"><feature>4.8 3 1.4 0.3</feature></entry>
+  <entry id="46"><feature>5.1 3.8 1.6 0.2</feature></entry>
+  <entry id="47"><feature>4.6 3.2 1.4 0.2</feature></entry>
+  <entry id="48"><feature>5.3 3.7 1.5 0.2</feature></entry>
+  <entry id="49"><feature>5 3.3 1.4 0.2</feature></entry>
+ </class>
+ <class name="Iris-versicolor">
+  <entry id="50"><feature>7 3.2 4.7 1.4</feature></entry>
+  <entry id="51"><feature>6.4 3.2 4.5 1.5</feature></entry>
+  <entry id="52"><feature>6.9 3.1 4.9 1.5</feature></entry>
+  <entry id="53"><feature>5.5 2.3 4 1.3</feature></entry>
+  <entry id="54"><feature>6.5 2.8 4.6 1.5</feature></entry>
+  <entry id="55"><feature>5.7 2.8 4.5 1.3</feature></entry>
+  <entry id="56"><feature>6.3 3.3 4.7 1.6</feature></entry>
+  <entry id="57"><feature>4.9 2.4 3.3 1</feature></entry>
+  <entry id="58"><feature>6.6 2.9 4.6 1.3</feature></entry>
+  <entry id="59"><feature>5.2 2.7 3.9 1.4</feature></entry>
+  <entry id="60"><feature>5 2 3.5 1</feature></entry>
+  <entry id="61"><feature>5.9 3 4.2 1.5</feature></entry>
+  <entry id="62"><feature>6 2.2 4 1</feature></entry>
+  <entry id="63"><feature>6.1 2.9 4.7 1.4</feature></entry>
+  <entry id="64"><feature>5.6 2.9 3.6 1.3</feature></entry>
+  <entry id="65"><feature>6.7 3.1 4.4 1.4</feature></entry>
+  <entry id="66"><feature>5.6 3 4.5 1.5</feature></entry>
+  <entry id="67"><feature>5.8 2.7 4.1 1</feature></entry>
+  <entry id="68"><feature>6.2 2.2 4.5 1.5</feature></entry>
+  <entry id="69"><feature>5.6 2.5 3.9 1.1</feature></entry>
+  <entry id="70"><feature>5.9 3.2 4.8 1.8</feature></entry>
+  <entry id="71"><feature>6.1 2.8 4 1.3</feature></entry>
+  <entry id="72"><feature>6.3 2.5 4.9 1.5</feature></entry>
+  <entry id="73"><feature>6.1 2.8 4.7 1.2</feature></entry>
+  <entry id="74"><feature>6.4 2.9 4.3 1.3</feature></entry>
+  <entry id="75"><feature>6.6 3 4.4 1.4</feature></entry>
+  <entry id="76"><feature>6.8 2.8 4.8 1.4</feature></entry>
+  <entry id="77"><feature>6.7 3 5 1.7</feature></entry>
+  <entry id="78"><feature>6 2.9 4.5 1.5</feature></entry>
+  <entry id="79"><feature>5.7 2.6 3.5 1</feature></entry>
+  <entry id="80"><feature>5.5 2.4 3.8 1.1</feature></entry>
+  <entry id="81"><feature>5.5 2.4 3.7 1</feature></entry>
+  <entry id="82"><feature>5.8 2.7 3.9 1.2</feature></entry>
+  <entry id="83"><feature>6 2.7 5.1 1.6</feature></entry>
+  <entry id="84"><feature>5.4 3 4.5 1.5</feature></entry>
+  <entry id="85"><feature>6 3.4 4.5 1.6</feature></entry>
+  <entry id="86"><feature>6.7 3.1 4.7 1.5</feature></entry>
+  <entry id="87"><feature>6.3 2.3 4.4 1.3</feature></entry>
+  <entry id="88"><feature>5.6 3 4.1 1.3</feature></entry>
+  <entry id="89"><feature>5.5 2.5 4 1.3</feature></entry>
+  <entry id="90"><feature>5.5 2.6 4.4 1.2</feature></entry>
+  <entry id="91"><feature>6.1 3 4.6 1.4</feature></entry>
+  <entry id="92"><feature>5.8 2.6 4 1.2</feature></entry>
+  <entry id="93"><feature>5 2.3 3.3 1</feature></entry>
+  <entry id="94"><feature>5.6 2.7 4.2 1.3</feature></entry>
+  <entry id="95"><feature>5.7 3 4.2 1.2</feature></entry>
+  <entry id="96"><feature>5.7 2.9 4.2 1.3</feature></entry>
+  <entry id="97"><feature>6.2 2.9 4.3 1.3</feature></entry>
+  <entry id="98"><feature>5.1 2.5 3 1.1</feature></entry>
+  <entry id="99"><feature>5.7 2.8 4.1 1.3</feature></entry>
+ </class>
+ <class name="Iris-virginica">
+  <entry id="100"><feature>6.3 3.3 6 2.5</feature></entry>
+  <entry id="101"><feature>5.8 2.7 5.1 1.9</feature></entry>
+  <entry id="102"><feature>7.1 3 5.9 2.1</feature></entry>
+  <entry id="103"><feature>6.3 2.9 5.6 1.8</feature></entry>
+  <entry id="104"><feature>6.5 3 5.8 2.2</feature></entry>
+  <entry id="105"><feature>7.6 3 6.6 2.1</feature></entry>
+  <entry id="106"><feature>4.9 2.5 4.5 1.7</feature></entry>
+  <entry id="107"><feature>7.3 2.9 6.3 1.8</feature></entry>
+  <entry id="108"><feature>6.7 2.5 5.8 1.8</feature></entry>
+  <entry id="109"><feature>7.2 3.6 6.1 2.5</feature></entry>
+  <entry id="110"><feature>6.5 3.2 5.1 2</feature></entry>
+  <entry id="111"><feature>6.4 2.7 5.3 1.9</feature></entry>
+  <entry id="112"><feature>6.8 3 5.5 2.1</feature></entry>
+  <entry id="113"><feature>5.7 2.5 5 2</feature></entry>
+  <entry id="114"><feature>5.8 2.8 5.1 2.4</feature></entry>
+  <entry id="115"><feature>6.4 3.2 5.3 2.3</feature></entry>
+  <entry id="116"><feature>6.5 3 5.5 1.8</feature></entry>
+  <entry id="117"><feature>7.7 3.8 6.7 2.2</feature></entry>
+  <entry id="118"><feature>7.7 2.6 6.9 2.3</feature></entry>
+  <entry id="119"><feature>6 2.2 5 1.5</feature></entry>
+  <entry id="120"><feature>6.9 3.2 5.7 2.3</feature></entry>
+  <entry id="121"><feature>5.6 2.8 4.9 2</feature></entry>
+  <entry id="122"><feature>7.7 2.8 6.7 2</feature></entry>
+  <entry id="123"><feature>6.3 2.7 4.9 1.8</feature></entry>
+  <entry id="124"><feature>6.7 3.3 5.7 2.1</feature></entry>
+  <entry id="125"><feature>7.2 3.2 6 1.8</feature></entry>
+  <entry id="126"><feature>6.2 2.8 4.8 1.8</feature></entry>
+  <entry id="127"><feature>6.1 3 4.9 1.8</feature></entry>
+  <entry id="128"><feature>6.4 2.8 5.6 2.1</feature></entry>
+  <entry id="129"><feature>7.2 3 5.8 1.6</feature></entry>
+  <entry id="130"><feature>7.4 2.8 6.1 1.9</feature></entry>
+  <entry id="131"><feature>7.9 3.8 6.4 2</feature></entry>
+  <entry id="132"><feature>6.4 2.8 5.6 2.2</feature></entry>
+  <entry id="133"><feature>6.3 2.8 5.1 1.5</feature></entry>
+  <entry id="134"><feature>6.1 2.6 5.6 1.4</feature></entry>
+  <entry id="135"><feature>7.7 3 6.1 2.3</feature></entry>
+  <entry id="136"><feature>6.3 3.4 5.6 2.4</feature></entry>
+  <entry id="137"><feature>6.4 3.1 5.5 1.8</feature></entry>
+  <entry id="138"><feature>6 3 4.8 1.8</feature></entry>
+  <entry id="139"><feature>6.9 3.1 5.4 2.1</feature></entry>
+  <entry id="140"><feature>6.7 3.1 5.6 2.4</feature></entry>
+  <entry id="141"><feature>6.9 3.1 5.1 2.3</feature></entry>
+  <entry id="142"><feature>5.8 2.7 5.1 1.9</feature></entry>
+  <entry id="143"><feature>6.8 3.2 5.9 2.3</feature></entry>
+  <entry id="144"><feature>6.7 3.3 5.7 2.5</feature></entry>
+  <entry id="145"><feature>6.7 3 5.2 2.3</feature></entry>
+  <entry id="146"><feature>6.3 2.5 5 1.9</feature></entry>
+  <entry id="147"><feature>6.5 3 5.2 2</feature></entry>
+  <entry id="148"><feature>6.2 3.4 5.4 2.3</feature></entry>
+  <entry id="149"><feature>5.9 3 5.1 1.8</feature></entry>
+ </class>
+</data>
+
+</database>

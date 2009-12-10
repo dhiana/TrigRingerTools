@@ -1,0 +1,32 @@
+package TrigRingerTools 
+
+author Andre dos Anjos <Andre.dos.Anjos@cern.ch>
+manager Rodrigo Coura Torres <Rodrigo.Torres@cern.ch>
+
+use AtlasPolicy			AtlasPolicy-*
+use AtlasGSL			AtlasGSL-*		External
+
+use AtlasXercesC		AtlasXercesC-00-*		External
+use GaudiInterface	GaudiInterface-01-*	External
+use CLIDSvc		CLIDSvc-*			Control
+use DataModel           DataModel-*                     Control
+
+use AtlasROOT         AtlasROOT-*         External
+use AtlasBoost		AtlasBoost-*			External
+
+#The schema files are being copyed withoud the addition of a "namespace" prefix.
+#Check if you can create a subdirectory in the share directory, or if you must prepend the package name
+#to the xsd files.
+apply_pattern declare_runtime extras="../share/schema/*.xsd" "name=Schema"
+
+library TrigRingerTools sys/*.cxx data/*.cxx roiformat/*.cxx rbuild/*.cxx config/*.cxx network/*.cxx
+apply_pattern installed_library
+
+private
+apply_tag ROOTSTLDictLibs
+apply_tag ROOTBasicLibs
+end_private
+
+macro neuralringer_version "0.7.0"
+
+macro_append TrigRingerTools_cppflags ' -DXERCES_XML_BACK_END -DNR_VERSION=\"$(neuralringer_version)\" -D__PACKAGE__=\"TrigRingerTools\" -DHAVE_INLINE -DATHENA_VERSION'

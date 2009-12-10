@@ -1,0 +1,9 @@
+#!/bin/bash
+
+if [ $# != 1 ]; then
+	echo "usage: $0 set-name";
+	exit 0;
+fi
+
+merge -m -o $1.xml ../dc1.001002.simul/$1/all-rois-merged.xml electron ../dc1.001003.simul/$1/all-rois-merged.xml electron ../dc1.002001.simul/$1/all-rois-merged.xml jet
+

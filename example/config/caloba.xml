@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<network version="0.3">
+
+<header>
+ <author>Andre dot dos dot Anjos at cern dot ch</author>
+ <name>Caloba example</name>
+ <version>1.0</version>
+ <created>2004-03-17T10:41:00</created>
+ <lastSaved>2004-03-17T10:41:00</lastSaved>
+ <comment>Implements a network Caloba mentions in his introductory classes on Neural Networks</comment>
+</header>
+
+<layout>
+  <input id="1" subtract="0.0" divide="1.0"></input>
+  <input id="2" subtract="0.0" divide="1.0"></input>
+  <bias id="3" bias="1"></bias>
+  <hidden id="4">
+   <backPropagation activationFunction="tanh" />
+  </hidden>
+  <hidden id="5">
+   <backPropagation activationFunction="tanh" />
+  </hidden>
+  <hidden id="6">
+   <backPropagation activationFunction="tanh" />
+  </hidden>
+  <output id="7">
+    <backPropagation activationFunction="linear" />
+  </output>
+  <output id="8">
+   <backPropagation activationFunction="tanh" />
+  </output>
+  <synapse id="1" from="3" to="4">
+   <weight>-0.1</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="2" from="3" to="5">
+   <weight>0.3</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="3" from="3" to="6">
+   <weight>0.1</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="4" from="1" to="4">
+   <weight>0.2</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="5" from="1" to="5">
+   <weight>-0.1</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="6" from="1" to="6">
+   <weight>0.1</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="7" from="2" to="4">
+   <weight>0.2</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="8" from="2" to="5">
+   <weight>0.3</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="9" from="2" to="6">
+   <weight>0.9</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="10" from="3" to="7">
+   <weight>0.2</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="11" from="3" to="8">
+   <weight>-0.1</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="12" from="4" to="7">
+   <weight>0.1</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="13" from="4" to="8">
+   <weight>0.5</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="14" from="5" to="7">
+   <weight>-0.1</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="15" from="5" to="8">
+   <weight>0.2</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="16" from="6" to="7">
+   <weight>-0.1</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+  <synapse id="17" from="6" to="8">
+   <weight>1.1</weight>
+   <backPropagation learnRate="0.2"/>
+  </synapse>
+</layout>
+
+</network>

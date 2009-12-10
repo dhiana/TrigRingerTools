@@ -1,0 +1,86 @@
+9
+
+dir
+199501
+svn+ssh://dferreir@svn.cern.ch/reps/atlasoff/Trigger/TrigTools/TrigRingerTools/tags/TrigRingerTools-03-27-05
+svn+ssh://dferreir@svn.cern.ch/reps/atlasoff
+
+
+
+2009-06-29T07:43:04.461825Z
+196248
+dquarrie
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+4525493e-7705-40b1-a816-d608a930855b
+
+share
+dir
+
+cmt
+dir
+
+script
+dir
+
+doc
+dir
+
+py_bindings
+dir
+
+src
+dir
+
+ChangeLog
+file
+
+
+
+
+2009-07-14T19:21:28.000000Z
+228ef2071b1754725012a602b1f80dbc
+2009-06-29T07:43:04.461825Z
+196248
+dquarrie
+has-props
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+2047
+
+example
+dir
+
+TrigRingerTools
+dir
+

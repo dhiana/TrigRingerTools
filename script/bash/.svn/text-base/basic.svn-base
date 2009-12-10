@@ -1,0 +1,50 @@
+#!/bin/bash 
+# Created by Andre Rabello dos Anjos <Andre.dos.Anjos@cern.ch>, 08-Jul-2004
+
+# Analyze all rfd files with respect to the xml ring configuration given
+# as parameter.
+
+if (( $# < 1 )); then
+    echo "usage: $0 <ringconfig1> [<ringconfigN>]";
+    exit 1;
+fi
+
+if [ ! -x `which ringer` ]; then
+	echo "[$0] Your neuralringer environment is not set.";
+	echo "[$0] Please, set it up first before calling me.";
+	exit 1;
+fi
+
+EXECUTABLE=`which ringer`;
+RINGER=`dirname $EXECUTABLE`;
+RINGER=$RINGER/..;
+
+current=`pwd`;
+echo "[$0] Current directory is \"$current\"";
+for rc in $*; do
+    name=`basename $rc .xml`;
+    echo "[$0] Process using configuration \"$rc\"...";
+    mkdir $name;
+    echo "[$0] Create XML ring representation";
+    cd $name; 
+    for rfd in `\ls $current/*.rfd`; do
+	ringer -c $current/$rc -r $rfd;
+    done
+    echo "[$0] Merge all xml files dumped so far";
+    merge -o all-rois-merged.xml `\ls *.xml`;
+    echo "[$0] Convert into text file";
+    xml2text -si all-rois-merged.xml 
+    echo "[$0] Producing histograms.";
+    R CMD BATCH $RINGER/script/topdf.R
+    echo "[$0] Convert the PDF's into PNG's";
+    for pdf in `\ls ring-*.pdf`; do
+    	convert $pdf `basename $pdf .pdf`.png
+    	rm -f $pdf;
+    done
+    echo "[$0] Compress the PNG's in ZIP file";
+    zip -m "all-rois-merged.zip" *.png;
+    cd -;
+    cp $current/$rc $name/ring-configuration.xml;
+    echo "[$0] Finished for \"$rc\".";
+done
+

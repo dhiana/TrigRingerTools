@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<network version="0.3">
+
+<header>
+ <author>Andre dot dos dot Anjos at cern dot ch</author>
+ <name>XOR example</name>
+ <version>1.0</version>
+ <created>2004-03-17T10:41:00</created>
+ <lastSaved>2004-03-17T10:41:00</lastSaved>
+ <comment>Implements the classical XOR problem</comment>
+</header>
+
+<layout>
+  <input id="1"></input>
+  <input id="2"></input>
+  <output id="3">
+   <backPropagation activationFunction="tanh" />
+  </output>
+  <synapse id="1" from="1" to="3">
+   <weight>0.5</weight>
+   <backPropagation learnRate="0.1"/>
+  </synapse>
+  <synapse id="2" from="2" to="3">
+   <weight>0.5</weight>
+   <backPropagation learnRate="0.1"/>
+  </synapse>
+</layout>
+
+</network>

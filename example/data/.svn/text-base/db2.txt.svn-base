@@ -1,0 +1,12 @@
+# This is an example PatternSet for tests.
+# The format of this file is:
+# 1. There may be any number of comment lines preceeding the data
+# 2. After the comments, there should be 2 numbers that indicate the
+#    number of patterns to be read and the pattern size.
+# 3. After that, a number of doubles/floats/integers that correspond,
+#    in order, to be patterns to be read.
+# Number of patterns, pattern size
+3 10
+0 0 0 0 0 0 0 0 0	1
+0 0 0 0 0 0 0 0 0	2
+0 0 0 0 0 0 0 0 0	3

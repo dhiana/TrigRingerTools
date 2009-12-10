@@ -1,0 +1,71 @@
+9
+
+dir
+199501
+svn+ssh://dferreir@svn.cern.ch/reps/atlasoff/Trigger/TrigTools/TrigRingerTools/tags/TrigRingerTools-03-27-05/py_bindings
+svn+ssh://dferreir@svn.cern.ch/reps/atlasoff
+
+
+
+2009-01-29T15:51:03.000000Z
+176974
+rtorres
+
+
+svn:special svn:externals svn:needs-lock
+
+
+
+
+
+
+
+
+
+
+
+4525493e-7705-40b1-a816-d608a930855b
+
+matlab
+dir
+
+rbuild
+dir
+
+roiformat
+dir
+
+__init__.py
+file
+
+
+
+
+2009-07-14T19:21:26.000000Z
+3c7e27d2e9f482c1208761dd331a5413
+2008-08-27T14:28:48.000000Z
+176920
+rtorres
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+32
+

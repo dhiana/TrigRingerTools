@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ring version="0.1">
+
+<header>
+ <author>Andre dot dos dot Anjos at cern dot ch</author>
+ <name>Example RingSet configuration</name>
+ <version>1.0</version>
+ <created>2004-07-01T15:31:00</created>
+ <lastSaved>2004-07-01T15:31:00</lastSaved>
+ <comment>An example ring set configuration</comment>
+</header>
+
+<config>
+	
+ <set name="Presampler" id="1" length="5" normalisation="NONE" section="EM">
+  <width eta="0.025" phi="0.1" />
+  <detector>
+   <entry>PSBARREL</entry>
+   <entry>PSENDCAP</entry>
+  </detector>
+ </set>
+
+ <set name="EM 1st. layer" id="2" length="22" normalisation="SET" section="EM">
+  <width eta="0.003125" phi="0.098175"/>
+  <detector>
+   <entry>EMBARREL1</entry>
+   <entry>EMENDCAP1</entry>
+  </detector>
+ </set>
+
+ <set name="EM 2nd layer" id="3" length="10" normalisation="SECTION"
+section="EM">
+  <width eta="0.025" phi="0.0245437" />
+  <detector>
+   <entry>EMBARREL2</entry>
+   <entry>EMENDCAP2</entry>
+  </detector>
+ </set>
+
+ <set name="EM 3rd. layer" id="4" length="10" normalisation="EVENT" section="EM">
+  <width eta="0.05" phi="0.0245437" />
+  <detector>
+   <entry>EMBARREL3</entry>
+   <entry>EMENDCAP3</entry>
+  </detector>
+ </set>
+
+ <set name="TileCal" id="5" length="3" normalisation="SECTION" section="HADRONIC">
+  <width eta="0.1" phi="0.098175" />
+  <detector>
+   <entry>TILEBARREL0</entry>
+   <entry>TILEBARREL1</entry>
+   <entry>TILEBARREL2</entry>
+   <entry>TILEGAPSCI0</entry>
+   <entry>TILEGAPSCI1</entry>
+   <entry>TILEGAPSCI2</entry>
+   <entry>TILEEXTB0</entry>
+   <entry>TILEEXTB1</entry>
+   <entry>TILEEXTB2</entry>
+  </detector>
+ </set>
+
+</config>
+
+</ring>

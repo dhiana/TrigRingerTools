@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# Reruns the analysis script over the data
+
+if [ $# = 0 ]; then
+	echo "usage: $0 set-name"
+	exit 1;
+fi
+
+# for all analysable files, make symlink
+for i in `\ls *.txt`; do
+	name="analysis"`echo $i | sed -e "s/$1//g;"`;
+	ln -s $i $name
+done
+
+R --no-save CMD BATCH ../analysis.R
+pdftops analysis.pdf
+psnup -4 analysis.ps analysis-4up.ps
+
+rm -f analysis*.txt;
+

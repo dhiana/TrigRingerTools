@@ -1,0 +1,24 @@
+#!/bin/bash
+
+# Converts a multipage PDF file into PNG's
+# Andre dos Anjos
+
+if [ $# != 2 ]; then
+	echo "usage: $0 <file.pdf> <number-of-pages>";
+	exit 1;
+fi
+
+i=$2;
+while [ $i != 0 ]; do
+	i=$(($i-1));
+	pngname=`basename $1 .pdf`"-$i.png";
+	echo -n "[$0] Converting page $i of $1, saving results at $pngname...";
+	convert "$1[$i]" $pngname;
+	echo "done";
+done
+
+echo "[$0] Compressing all PNG's into a zip file.";
+zip -jm `basename $1 .pdf`.zip *.png;
+echo "[$0] Finished successfully. Bye.";
+exit 0;
+

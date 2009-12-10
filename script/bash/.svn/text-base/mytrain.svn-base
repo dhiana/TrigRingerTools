@@ -1,0 +1,54 @@
+#!/bin/bash
+
+#Trains a neural network starting from an XML
+#database and proceeding till analysis is performed
+#and a bunch of PDF's are saved to the output
+
+#Andre DOS ANJOS
+
+if [ $# = 0 ]; then
+	echo "usage: $0 db.xml";	
+	exit 1;
+fi
+
+pfile="parameters.txt";
+prefix=`basename $1 .xml`;
+mydate=`date +%d.%B.%Y-%H:%M:%S`;
+results=$prefix-$mydate;
+trainperc="--train-percentage=-0.5";
+trainparam="--epoch=200 --stop-iteration=10 --learn-rate=0.1 --learn-rate-decay=0.9995 --momentum=0 --hidden=7 --stop-threshold=0.001 --db=../$1 --sample-interval=20";
+mkdir -pv $results;
+current=`pwd`;
+cd $results;
+
+#stores the parameters
+echo "Train of neuralringer started at $mydate" > $pfile;
+echo "============================================================" >> $pfile;
+echo "Train parameters are:" >> $pfile;
+echo "[mlp-train] $trainperc $trainparam" >> $pfile;
+echo >> $pfile;
+
+#runs the network training phase
+mlp-train $trainperc $trainparam
+
+# converts the outputs (train and test), with targets, from XML to text
+xml2text -si $prefix.out.xml $prefix.out.txt
+echo "XML to Text conversion parameters are:" >> $pfile;
+echo "[xml2text] -si $prefix.out.xml $prefix.out.txt" >> $pfile;
+echo >> $pfile;
+
+# performs the relevance studies
+mlp-relevance $trainper --db=../$1 -n $prefix.end.xml;
+echo "Relevance estimation parameters are:" >> $pfile;
+echo "[mlp-relevance] $trainper --db=../$1 -n $prefix.end.xml" >> $pfile;
+echo >> $pfile;
+
+# runs the analysis script in R, producing the PDF
+../myanalysis $prefix;
+echo "Analysis performed by R, with input file \`../analysis.R\'" >> $pfile;
+echo >> $pfile;
+
+echo "============================================================" >> $pfile;
+echo "Train of neuralringer finished at `date +%d.%B.%Y-%H:%M:%S`" >> $pfile;
+
+exit 0;

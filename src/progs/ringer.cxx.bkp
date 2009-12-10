@@ -1,0 +1,197 @@
+//Dear emacs, this is -*- c++ -*-
+
+/**
+ * @file ringer.cxx
+ * @author <a href="mailto:Andre.dos.Anjos@cern.ch">Andre DOS ANJOS</a> 
+ * $Author: dferreir $
+ * $Revision: 1.5 $
+ * $Date: 2008-05-23 09:03:57 $
+ *
+ * Arranges calorimetry cell data (roiformat dump) in concentric rings of
+ * configurable size and center and dump an XML file containing the ring'ified
+ * information for every RoI and their metadata (LVL1 and RoI identifiers and
+ * etaxphi information).
+ */
+
+#include "TrigRingerTools/rbuild/Config.h"
+#include "TrigRingerTools/rbuild/util.h"
+#include "TrigRingerTools/sys/LocalReporter.h"
+#include "TrigRingerTools/sys/Exception.h"
+#include "TrigRingerTools/sys/debug.h"
+#include "TrigRingerTools/sys/util.h"
+#include "TrigRingerTools/sys/OptParser.h"
+#include "TrigRingerTools/data/Database.h"
+#include "TrigRingerTools/data/DatabaseXml.h"
+#include "TrigRingerTools/data/DatabaseRoot.h"
+#include "TrigRingerTools/roiformat/Database.h"
+#include <iostream>
+#include <cstdio>
+#include <cmath>
+#include <ctime>
+#include "TrigRingerTools/data/PatternSet.h"
+
+
+typedef struct param_t {
+  std::string roidump; ///< roi dump file to read data from 
+  std::string ringconfig; ///< ring configuration XML file
+  bool global_center; ///< should I calculate a peak on each calo layer?
+  double eta_window; ///< the eta size of the window for peak finding
+  double phi_window; ///< the phi size of the window for peak finding
+  bool dumproot;
+} param_t;
+
+/**
+ * Checks and validates program options.
+ *
+ * @param p The parameters, already parsed
+ * @param reporter The reporter to use when reporting problems to the user
+ */
+bool checkopt (const param_t& p, sys::Reporter* reporter)
+{
+  if (!p.roidump.size()) throw RINGER_EXCEPTION("No dump to read data from");
+  if (!sys::exists(p.roidump)) {
+    RINGER_DEBUG1("RoI dump file " << p.roidump << " doesn't exist.");
+    throw RINGER_EXCEPTION("RoI dump file doesn't exist");
+  }
+  if (!p.ringconfig.size()) {
+    throw RINGER_EXCEPTION("No ring configuration file");
+  }
+  if (!sys::exists(p.ringconfig)) {
+    RINGER_DEBUG1("Ring config file " << p.ringconfig << " doesn't exist.");
+    throw RINGER_EXCEPTION("Ring config file doesn't exist");
+  }
+  return true;
+}
+
+int main (int argc, char** argv)
+{
+  sys::Reporter *reporter = new sys::LocalReporter();
+
+  param_t par = { "", "", false, 0.1, 0.1 };
+  sys::OptParser opt_parser(argv[0]);
+  opt_parser.add_option("ring-config", 'c', par.ringconfig, 
+			"location of the Ring Configuration XML file to use");
+  opt_parser.add_option("eta-window", 'e', par.eta_window, 
+			"Width of the window for peak searching in eta");
+  opt_parser.add_option("global-center", 'g', par.global_center,
+			"Use etaxphi center as provided by layer 2 (default is false)");
+  opt_parser.add_option("phi-window", 'p', par.phi_window, 
+			"Width of the window for peak searching in phi");
+  opt_parser.add_option("roi-dump", 'r', par.roidump,
+			"location of the RoI dumpfile to read data from");
+  opt_parser.add_option("dump-root", 'd', par.dumproot,
+			"whether to dump to a ROOT file or XML file");
+  opt_parser.parse(argc, argv);
+
+  try {
+    if (!checkopt(par, reporter))
+      RINGER_FATAL(reporter, "Terminating execution.");
+  }
+  catch (sys::Exception& ex) {
+    RINGER_EXCEPT(reporter, ex.what());
+    RINGER_FATAL(reporter, "I can't handle that exception. Aborting.");
+  }
+
+  //start processing
+  std::string bname = sys::stripname(par.roidump);
+
+  try {
+
+    //load roidump first
+    roiformat::Database roidump(reporter);
+    roidump.load(par.roidump);
+    RINGER_REPORT(reporter, "Loaded RoI dump database at \"" << par.roidump 
+		  << "\".");
+    //then config
+    rbuild::Config config(par.ringconfig, reporter);
+    RINGER_REPORT(reporter, "Loaded Ring configuration at \""
+		  << par.ringconfig << "\".");
+    //do the processing:
+    //1. For each configured ring set, create a *real* RingSet
+    std::vector<rbuild::RingSet> rset;
+    const std::map<unsigned int, rbuild::RingConfig>& rconfig = 
+      config.config();
+    unsigned int nrings = 0;
+    for (std::map<unsigned int, rbuild::RingConfig>::const_iterator 
+	   it=rconfig.begin(); it!=rconfig.end(); ++it) {
+      rset.push_back(it->second);
+      nrings += it->second.max();
+    } //creates, obligatorily, ordered ring sets
+
+    //2. Pass the relevant cells through the relevant RingSet(s).
+    std::vector<const roiformat::RoI*> rois;
+    roidump.rois(rois); //get a handle to all RoI's available
+    data::RoIPatternSet ringdb(roidump.size(), nrings);
+
+    size_t i=0;
+    for (std::vector<const roiformat::RoI*>::const_iterator
+	   it=rois.begin(); it!=rois.end(); ++it) {
+      RINGER_REPORT(reporter, "Calculating rings for RoI -> L1Id #"
+		    << (*it)->lvl1_id() << " and RoI #" << (*it)->roi_id());
+      double eta, phi; //center values
+      bool ok = rbuild::find_center(reporter, *it, eta, phi);
+      // only use layer 2 center, if an explicit request was made
+      ok &= par.global_center; 
+      rbuild::build_rings(reporter, *it, rset, ok, eta, phi, 
+			  par.eta_window, par.phi_window);
+      rbuild::normalize_rings(reporter, rset);
+
+      //extra "magic" to place the entry at the output DB
+      bool rings_not_init = true;
+      data::Pattern these_rings(1);
+      for (std::vector<rbuild::RingSet>::iterator 
+	     jt=rset.begin(); jt!=rset.end(); ++jt) {
+	//Now store the values as a data::Pattern before returning
+	if (rings_not_init) {
+	  these_rings = jt->pattern();
+	  rings_not_init = false;
+	}
+	else these_rings.append(jt->pattern());
+      } //for each RingSet (third iteration)
+
+      data::RoIPatternSet::RoIAttribute attr;
+      attr.lvl1_id = (*it)->lvl1_id();
+      attr.roi_id = (*it)->roi_id();
+      attr.eta = (*it)->eta();
+      attr.phi = (*it)->phi();
+      ringdb.set_pattern(i, these_rings, attr);
+      ++i;
+
+    } //for all RoI's
+
+    RINGER_REPORT(reporter, "Prepare do database dump");
+    //prepare the database to dump
+    if (par.dumproot) {
+      RINGER_DEBUG3("Dumping to root file.");
+      std::map<std::string, data::RoIPatternSet*> psmap;
+      psmap[bname] = &ringdb;
+      data::DatabaseRoot<data::RoIPatternSet> db(psmap, reporter);
+      std::string outfilename = bname;
+      outfilename += "-rings.root";
+      std::map<const std::string, const data::RootClassInfo> imap;
+      imap.insert(make_pair(bname, data::RootClassInfo(outfilename)));
+      db.save(imap);
+      RINGER_REPORT(reporter, "Output file \"" << outfilename
+  		    << "\" was correctly saved and closed.");
+    } else {
+      std::string comment = "Originated from file ";
+      comment += par.roidump;
+      data::Header h("Andre ANJOS", bname, "2.0", time(0), comment);
+      std::map<std::string, data::RoIPatternSet*> psmap;
+      psmap[bname] = &ringdb;
+      data::DatabaseXml<data::RoIPatternSet> db(&h, psmap, reporter);
+      std::string outfilename = bname;
+      outfilename += "-rings.xml";
+      db.save(outfilename);
+      RINGER_REPORT(reporter, "Output file \"" << outfilename
+  		    << "\" was correctly saved and closed.");
+    }
+  } //try clause
+
+  catch (sys::Exception& ex) {
+    RINGER_FATAL(reporter, ex.what());
+  }
+  //dump ring cells in plain text format
+  RINGER_REPORT(reporter, "Successful exit. Bye");
+  delete reporter;
+}

@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ring version="0.1">
+
+<header>
+ <author>Andre dot dos dot Anjos at cern dot ch</author>
+ <name>RingSet configuration for all Calo layers</name>
+ <version>1.0</version>
+ <created>2004-07-01T15:31:00</created>
+ <lastSaved>2004-07-01T15:31:00</lastSaved>
+ <comment>A ring configuration that calculates rings for all calorimeter layers</comment>
+</header>
+
+<config>
+	
+ <set name="Presampler" id="1" length="8" normalisation="NONE" section="EM">
+  <width eta="0.02498" phi="0.098173" />
+  <detector>
+   <entry>PSBARREL</entry>
+   <entry>PSENDCAP</entry>
+  </detector>
+ </set>
+
+ <set name="EM 1st. layer" id="2" length="64"
+	 normalisation="NONE" section="EM">
+  <width eta="0.0031245" phi="0.098173"/>
+  <detector>
+   <entry>EMBARREL1</entry>
+   <entry>EMENDCAP1</entry>
+  </detector>
+ </set>
+
+ <set name="EM 2nd layer" id="3" length="8"
+	 normalisation="NONE" section="EM">
+  <width eta="0.04998" phi="0.024542" />
+  <detector>
+   <entry>EMBARREL2</entry>
+   <entry>EMENDCAP2</entry>
+  </detector>
+ </set>
+
+ <set name="EM 3rd. layer" id="4" length="8"
+	 normalisation="NONE" section="EM">
+  <width eta="0.04998" phi="0.024542" />
+  <detector>
+   <entry>EMBARREL3</entry>
+   <entry>EMENDCAP3</entry>
+  </detector>
+ </set>
+
+ <set name="HAD 1st. layer" id="5" length="4"
+	 normalisation="NONE" section="HADRONIC">
+  <width eta="0.09998" phi="0.098173" />
+  <detector>
+   <entry>HADENCAP0</entry>
+   <entry>TILEBARREL0</entry>
+   <entry>TILEGAPSCI0</entry>
+   <entry>TILEEXTB0</entry>
+  </detector>
+ </set>
+
+ <set name="HAD 2nd. layer" id="6" length="4"
+	 normalisation="NONE" section="HADRONIC">
+  <width eta="0.09998" phi="0.098173" />
+  <detector>
+   <entry>HADENCAP1</entry>
+   <entry>TILEBARREL1</entry>
+   <entry>TILEGAPSCI1</entry>
+   <entry>TILEEXTB1</entry>
+  </detector>
+ </set>
+
+ <set name="HAD 3rd. layer" id="7" length="4"
+	 normalisation="NONE" section="HADRONIC">
+  <width eta="0.09998" phi="0.098173" />
+  <detector>
+   <entry>HADENCAP2</entry>
+   <entry>HADENCAP3</entry>
+   <entry>TILEBARREL2</entry>
+   <entry>TILEGAPSCI2</entry>
+   <entry>TILEEXTB2</entry>
+  </detector>
+ </set>
+
+</config>
+
+</ring>

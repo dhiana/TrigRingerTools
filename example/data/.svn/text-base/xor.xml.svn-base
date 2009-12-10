@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<database version="0.1">
+
+<header>
+ <author>Andre dot dos dot Anjos at cern dot ch</author>
+ <name>XOR example database</name>
+ <version>1.0</version>
+ <created>2004-03-17T10:41:00</created>
+ <lastSaved>2004-03-17T10:41:00</lastSaved>
+ <comment>This is data for the XOR example</comment>
+</header>
+
+<data>
+ <class name="off">
+  <entry id="0"><feature>-1 -1</feature></entry>
+  <entry id="3"><feature>1 1</feature></entry>
+ </class> 
+ <class name="on">
+  <entry id="1"><feature>1 -1</feature></entry>
+  <entry id="2"><feature>-1 1</feature></entry>
+ </class> 
+</data>
+
+</database>
