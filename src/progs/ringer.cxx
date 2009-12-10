@@ -171,7 +171,7 @@ int main (int argc, char** argv)
         roiformat::Cell cell( static_cast<roiformat::Cell::Sampling>( static_cast<int>( det_vec.at(j) )) , eta_vec.at(j) , phi_vec.at(j) , 0., 0., 0., 0., et_vec.at(j));
         if (deadcells.size()>0) {
           dead_cell = false;
-          for(Int_t i=0; i < deadcells.size(); i++){
+          for(unsigned i=0; i < deadcells.size(); i++){
             if( (cell.sampling() == deadcells[i].sampling()) && ( absVal(cell.eta() - deadcells[i].eta()) < dead_window ) && ( absVal(cell.phi()-deadcells[i].phi()) < dead_window) ){
               dead_cell = true;
             }

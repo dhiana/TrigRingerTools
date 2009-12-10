@@ -1,3 +1,0 @@
-09.12.09-13:22:29: This is the NeuralRinger v0.8.0 Reporter.
-09.12.09-13:22:29: NeuralRinger was compiled to use Gnome's Libxml2.
-09.12.09-13:22:39: NeuralRinger v0.8.0 Reporter has finished.
